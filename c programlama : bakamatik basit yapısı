@@ -1,0 +1,238 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<locale.h>
+#include<string.h>
+struct kayit{
+	char isim[20];
+	char soyad[20];
+	int ytc;
+	int parola;
+	int yparola;
+	int bakiye;
+};
+struct musteri{
+int tc;
+int parola1;
+kayit hesap;
+};
+
+typedef struct musteri bilgi;
+FILE *ptr;
+bilgi k;
+char sec;
+
+
+void yenihesap()
+{
+	b:
+		system("cls");
+	printf("isim    :");scanf("%s",k.hesap.isim);
+	printf("soyad   :");scanf("%s",k.hesap.soyad);
+	printf("tc no   :");scanf("%d",&k.hesap.ytc);
+	printf("parola  :");scanf("%d",&k.hesap.parola);
+	printf("parola tekrar  :");scanf("%d",&k.hesap.yparola);
+	printf("bakiye   :");scanf("%d",&k.hesap.bakiye);
+	printf("işlemi onaylıyorsanız [e]veya [E] basınız iptal icn [p] basınız :"); scanf(" %c",&sec);
+	  if(k.hesap.parola!=k.hesap.yparola)
+	  {
+	  	printf("parolalar eşleşmiyor \n");
+	  	goto b;
+	  }
+	
+else if(sec=='e' || sec=='E')
+	{
+		if((ptr=fopen("banka.txt","w"))!=NULL)    
+		
+		{
+			fprintf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,k.hesap.ytc,k.hesap.parola,k.hesap.bakiye);
+			printf("hesabınız başarıyla uluştu \n");
+		}
+		else{
+			printf("\ndosya blunamadı..");
+		}
+		fclose(ptr);
+		
+	}
+	else if(sec=='p')
+	{
+	printf("\nana menüye gidiliyur ....");
+		
+	}
+	else{
+		printf("hatalı secim yapıldı...\n ");
+		printf("ana menüye gidiliyur ....\n");
+	}
+}
+
+
+
+int giris()
+{
+	system("cls");
+	int sayi=3;
+	x:
+	printf("tc kimlik no : ");scanf("%d",&k.tc);
+	printf("parola       : ");scanf("%d",&k.parola1);
+	if((ptr=fopen("banka.txt","r+"))!=NULL)
+	{
+		fscanf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,&k.hesap.ytc,&k.hesap.parola,&k.hesap.bakiye);
+		if(k.hesap.ytc!=k.tc ||k.hesap.parola!=k.parola1)
+		{
+			printf("tc yada parola hatalı ....\n");
+			goto x;//bir düngü oluşturdum;
+		}
+		else
+		{
+		    sayi=2;//funksion sunucu 2 ise giriş yapılmıştır ama foksion sunucu 3 olur ise giriş yapılmadı olur
+			
+		}
+		
+		
+	}
+	fclose(ptr);
+	return sayi;
+	
+}
+
+void cek(){
+	
+	if((ptr=fopen("banka.txt","r+"))!=NULL)
+	{
+		int tutar;
+		printf("cekeceğin miktarı belirle : ");scanf("%d",&tutar);
+	fscanf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,&k.hesap.ytc,&k.hesap.parola,&k.hesap.bakiye);
+	if(tutar>k.hesap.bakiye)
+	{
+		printf("yetersiz bakiye \n");
+		printf("ana menüye gidiliyor..");
+		
+	}
+	else{
+	k.hesap.bakiye-=tutar;
+	fprintf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,k.hesap.ytc,k.hesap.parola,k.hesap.bakiye);
+	printf("paranızı bulmeden alabilirsiniz\n");
+	}
+		
+		
+	}
+	else{
+		printf("dosys bulaunamadı");
+	}
+	fclose(ptr);
+}
+
+void yat()
+{
+		
+	if((ptr=fopen("banka.txt","r+"))!=NULL)
+	{
+		int tutar;
+	printf("yatırılscsk miktarı belirle : ");scanf("%d",&tutar);
+	fscanf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,&k.hesap.ytc,&k.hesap.parola,&k.hesap.bakiye);
+	k.hesap.bakiye+=tutar;
+	fprintf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,k.hesap.ytc,k.hesap.parola,k.hesap.bakiye);
+	
+		
+		
+	}
+	else{
+		printf("dosys bulaunamadı");
+	}
+	fclose(ptr);
+	
+}
+
+
+void sorgula()
+{
+			
+	if((ptr=fopen("banka.txt","r+"))!=NULL)
+	{
+	fscanf(ptr,"%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,&k.hesap.ytc,&k.hesap.parola,&k.hesap.bakiye);
+	printf("%s\t%s\t%d\t%d\t%d\n",k.hesap.isim,k.hesap.soyad,k.hesap.ytc,k.hesap.parola,k.hesap.bakiye);
+	}
+	else{
+		printf("dosys bulaunamadı");
+	}
+	fclose(ptr);
+}
+
+
+
+int menu2(){
+	int say;
+	printf("\n1-para cek\n");
+	printf("2-para yatir\n");
+	printf("3-bakiye surgula\n");
+	printf("4-cıkış\n");
+	printf("secim : ");scanf("%d",&say);
+	return say;
+}
+
+int menu1()
+{
+	int secim;
+	printf("\n1-giriş\n");
+	printf("2-hesap ac\n");
+	printf("0-cıkış\n");
+	printf("secim  : ");scanf("%d",&secim);
+	return secim;
+}
+int main()
+{
+	int i;
+	setlocale(LC_ALL,"Turkish");
+	int secim;
+	while(1)
+	{
+		secim=menu1();
+		
+		
+			if(secim==1){
+			
+			   i=giris();
+				if(i==2)
+				{
+					int al;
+					printf("giris yapıldı..\n");
+					while(1)
+					{
+						al=menu2();
+						switch(al){
+						
+						case 1:
+							cek();break;
+						case 2:
+							yat();break;
+						case 3:
+							sorgula();break;
+						case 4:
+						printf("cıkış yapılıyor ....\n");
+						return 0;
+						default: 
+						printf("hatalı secim yapıldı");
+					}
+						
+					}
+				}
+				else if(i==3)
+				{
+					printf("EROOR");
+					return 0;
+				}
+		}
+		else if(secim==2)
+			 yenihesap();
+		else if(secim==0){
+		
+			printf("cıkış yapıldı");
+			return 0;
+		}
+		    else{
+			
+			printf("hatalı secim yapıldı");break;
+		}
+		
+	}
+	return 0;
+}
